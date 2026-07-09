@@ -7,11 +7,13 @@
     "rootDir": "./src",
     "outDir": "./dist",
 
-    "strict": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
 
+    "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-
     "forceConsistentCasingInFileNames": true
   },
 
