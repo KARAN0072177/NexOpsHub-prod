@@ -1,0 +1,71 @@
+import argon2 from "argon2";
+
+import { pendingUserRepository } from "../repositories/pending-user.repository.js";
+import { userRepository } from "../repositories/user.repository.js";
+
+import {
+  generateVerificationToken,
+  hashVerificationToken,
+} from "@/shared/utils/token.js";
+
+import { addMinutes } from "@/shared/utils/date.js";
+
+export class RegisterService {
+  async execute(email: string, password: string) {
+    // Check if a verified user already exists
+    const existingUser = await userRepository.findByEmail(email);
+
+    if (existingUser) {
+      return {
+        success: true,
+        message:
+          "If the information provided is valid, you'll receive an email shortly.",
+      };
+    }
+
+    // Hash password
+    const passwordHash = await argon2.hash(password);
+
+    // Generate verification token
+    const verificationToken = generateVerificationToken();
+
+    const verificationTokenHash =
+      hashVerificationToken(verificationToken);
+
+    const verificationExpiresAt = addMinutes(
+      Number(process.env.REGISTER_TOKEN_EXPIRES_MINUTES ?? 10)
+    );
+
+    // Check pending registration
+    const pendingUser = await pendingUserRepository.findByEmail(email);
+
+    if (pendingUser) {
+      await pendingUserRepository.updateVerification({
+        email,
+        passwordHash,
+        verificationTokenHash,
+        verificationExpiresAt,
+      });
+    } else {
+      await pendingUserRepository.create({
+        email,
+        passwordHash,
+        verificationTokenHash,
+        verificationExpiresAt,
+      });
+    }
+
+    /**
+     * TODO:
+     * Send verification email.
+     */
+
+    return {
+      success: true,
+      message:
+        "If the information provided is valid, you'll receive an email shortly.",
+    };
+  }
+}
+
+export const registerService = new RegisterService();
