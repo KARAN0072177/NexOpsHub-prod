@@ -13,9 +13,12 @@ import { addMinutes } from "@/shared/utils/date.js";
 import { emailService } from "@/shared/email/index.js";
 
 export class RegisterService {
-    async execute(email: string, password: string) {
+    async execute(data: {
+  email: string;
+  password: string;
+}) {
         // Check if a verified user already exists
-        const existingUser = await userRepository.findByEmail(email);
+        const existingUser = await userRepository.findByEmail(data.email);
 
         if (existingUser) {
             return {
@@ -26,7 +29,7 @@ export class RegisterService {
         }
 
         // Hash password
-        const passwordHash = await argon2.hash(password);
+        const passwordHash = await argon2.hash(data.password);
 
         // Generate verification token
         const verificationToken = generateVerificationToken();
@@ -39,18 +42,18 @@ export class RegisterService {
         );
 
         // Check pending registration
-        const pendingUser = await pendingUserRepository.findByEmail(email);
+        const pendingUser = await pendingUserRepository.findByEmail(data.email);
 
         if (pendingUser) {
             await pendingUserRepository.updateVerification({
-                email,
+                email: data.email,
                 passwordHash,
                 verificationTokenHash,
                 verificationExpiresAt,
             });
         } else {
             await pendingUserRepository.create({
-                email,
+                email : data.email,
                 passwordHash,
                 verificationTokenHash,
                 verificationExpiresAt,
@@ -58,7 +61,7 @@ export class RegisterService {
         }
 
         await emailService.sendVerificationEmail(
-            email,
+            data.email,
             verificationToken
         );
 

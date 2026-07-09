@@ -4,6 +4,10 @@ import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 
+// routes 
+
+import authRoutes from "./modules/auth/routes/auth.routes.js";
+
 dotenv.config();
 
 const app = express();
@@ -21,6 +25,8 @@ app.get("/health", (_req, res) => {
     environment: process.env.NODE_ENV ?? "development",
   });
 });
+
+app.use("/api/auth", authRoutes);
 
 const PORT = Number(process.env.PORT) || 4000;
 
