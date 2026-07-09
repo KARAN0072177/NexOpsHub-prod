@@ -25,10 +25,8 @@ model PendingUser {
   id                    String   @id @default(cuid())
   email                 String   @unique
   passwordHash          String
-
   verificationTokenHash String
   verificationExpiresAt DateTime
-
   createdAt             DateTime @default(now())
 
   @@map("pending_users")
