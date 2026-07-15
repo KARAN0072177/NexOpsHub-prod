@@ -2,40 +2,61 @@ export function verificationEmailTemplate(
   verificationUrl: string
 ): string {
   return `
-    <div style="font-family: Arial, Helvetica, sans-serif; max-width:600px; margin:auto;">
-      <h2>Verify your email</h2>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Email Verification</title>
+</head>
 
-      <p>
-        Thank you for registering with <strong>NexOpsHub</strong>.
-      </p>
+<body style="font-family:Arial,sans-serif;background:#f8fafc;padding:40px;">
 
-      <p>
-        Click the button below to verify your email address.
-      </p>
+<div
+style="
+max-width:600px;
+margin:auto;
+background:white;
+padding:32px;
+border-radius:12px;
+">
 
-      <p style="margin:32px 0;">
-        <a
-          href="${verificationUrl}"
-          style="
-            background:#2563eb;
-            color:white;
-            text-decoration:none;
-            padding:12px 24px;
-            border-radius:8px;
-            display:inline-block;
-          "
-        >
-          Verify Email
-        </a>
-      </p>
+<h2>Welcome to NexOpsHub 👋</h2>
 
-      <p>
-        This link expires in <strong>10 minutes</strong>.
-      </p>
+<p>
+Please verify your email address to activate your account.
+</p>
 
-      <p>
-        If you didn't create this account, you can safely ignore this email.
-      </p>
-    </div>
-  `;
+<p style="margin:32px 0;">
+
+<a
+href="${verificationUrl}"
+style="
+background:#2563eb;
+color:white;
+padding:14px 24px;
+border-radius:8px;
+text-decoration:none;
+display:inline-block;
+"
+>
+Verify Email
+</a>
+
+</p>
+
+<p>
+This verification link expires in
+<strong>10 minutes</strong>.
+</p>
+
+<p>
+If you didn't create this account,
+you can safely ignore this email.
+</p>
+
+</div>
+
+</body>
+</html>
+`;
 }

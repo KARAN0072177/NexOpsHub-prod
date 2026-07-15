@@ -14,9 +14,9 @@ import { emailService } from "@/shared/email/index.js";
 
 export class RegisterService {
     async execute(data: {
-  email: string;
-  password: string;
-}) {
+        email: string;
+        password: string;
+    }) {
         // Check if a verified user already exists
         const existingUser = await userRepository.findByEmail(data.email);
 
@@ -41,6 +41,9 @@ export class RegisterService {
             Number(process.env.REGISTER_TOKEN_EXPIRES_MINUTES ?? 10)
         );
 
+        const verificationUrl =
+            `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+
         // Check pending registration
         const pendingUser = await pendingUserRepository.findByEmail(data.email);
 
@@ -53,17 +56,17 @@ export class RegisterService {
             });
         } else {
             await pendingUserRepository.create({
-                email : data.email,
+                email: data.email,
                 passwordHash,
                 verificationTokenHash,
                 verificationExpiresAt,
             });
         }
 
-        await emailService.sendVerificationEmail(
-            data.email,
-            verificationToken
-        );
+        await emailService.sendVerificationEmail({
+            email: data.email,
+            verificationUrl,
+        });
 
         return {
             success: true,

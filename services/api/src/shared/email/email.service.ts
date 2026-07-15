@@ -5,18 +5,15 @@ import { verificationEmailTemplate } from "./templates/verification-email.js";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export class EmailService {
-  async sendVerificationEmail(
-    email: string,
-    token: string
-  ): Promise<void> {
-    const verificationUrl =
-      `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
-
+  async sendVerificationEmail(data: {
+    email: string;
+    verificationUrl: string;
+  }): Promise<void> {
     await resend.emails.send({
       from: process.env.EMAIL_FROM!,
-      to: email,
+      to: data.email,
       subject: "Verify your NexOpsHub account",
-      html: verificationEmailTemplate(verificationUrl),
+      html: verificationEmailTemplate(data.verificationUrl),
     });
   }
 }
