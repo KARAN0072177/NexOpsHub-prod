@@ -50,7 +50,7 @@ model PendingUser {
 
   verificationTokenHash String
 
-  verificationExpiresAt DateTime
+  expiresAt DateTime
 
   createdAt DateTime @default(now())
 

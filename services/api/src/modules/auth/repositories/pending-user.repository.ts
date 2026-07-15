@@ -45,6 +45,22 @@ export class PendingUserRepository {
       },
     });
   }
+
+  async findByVerificationTokenHash(tokenHash: string) {
+    return prisma.pendingUser.findFirst({
+      where: {
+        verificationTokenHash: tokenHash,
+      },
+    });
+  }
+
+  async delete(id: string) {
+    return prisma.pendingUser.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }
 
 export const pendingUserRepository = new PendingUserRepository();
