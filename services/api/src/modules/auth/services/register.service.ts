@@ -52,14 +52,14 @@ export class RegisterService {
                 email: data.email,
                 passwordHash,
                 verificationTokenHash,
-                verificationExpiresAt,
+                expiresAt: verificationExpiresAt,
             });
         } else {
             await pendingUserRepository.create({
                 email: data.email,
                 passwordHash,
                 verificationTokenHash,
-                verificationExpiresAt,
+                expiresAt: verificationExpiresAt,
             });
         }
 

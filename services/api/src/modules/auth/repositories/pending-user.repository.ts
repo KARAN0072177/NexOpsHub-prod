@@ -13,7 +13,7 @@ export class PendingUserRepository {
     email: string;
     passwordHash: string;
     verificationTokenHash: string;
-    verificationExpiresAt: Date;
+    expiresAt: Date;
   }) {
     return prisma.pendingUser.create({
       data,
@@ -23,7 +23,7 @@ export class PendingUserRepository {
   async updateVerification(data: {
     email: string;
     verificationTokenHash: string;
-    verificationExpiresAt: Date;
+    expiresAt: Date;
     passwordHash: string;
   }) {
     return prisma.pendingUser.update({
@@ -33,7 +33,7 @@ export class PendingUserRepository {
       data: {
         passwordHash: data.passwordHash,
         verificationTokenHash: data.verificationTokenHash,
-        verificationExpiresAt: data.verificationExpiresAt,
+        expiresAt: data.expiresAt,
       },
     });
   }
