@@ -26,6 +26,10 @@ app.get("/health", (_req, res) => {
   });
 });
 
+app.get("/api/test", (_req, res) => {
+  res.json({ message: "API is working" });
+});
+
 app.use("/api/auth", authRoutes);
 
 const PORT = Number(process.env.PORT) || 4000;
