@@ -7,27 +7,110 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model organizations {
-  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name       String    @unique @db.VarChar(255)
-  slug       String    @unique @db.VarChar(100)
-  created_at DateTime? @default(now()) @db.Timestamp(6)
+model Organization {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String   @unique @db.VarChar(255)
+  slug      String   @unique @db.VarChar(100)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@map("organizations")
 }
 
-model users {
-  id         Int       @id @default(autoincrement())
-  email      String    @unique @db.VarChar(255)
-  username   String    @db.VarChar(100)
-  created_at DateTime? @default(now()) @db.Timestamp(6)
+model User {
+  id String @id @default(cuid())
+
+  email String @unique
+
+  displayName String?
+
+  username String? @unique
+
+  avatar String?
+
+  emailVerifiedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  accounts Account[]
+
+  sessions Session[]
+
+  @@map("users")
 }
 
 model PendingUser {
-  id                    String   @id @default(cuid())
-  email                 String   @unique
-  passwordHash          String
+  id String @id @default(cuid())
+
+  email String @unique
+
+  passwordHash String
+
   verificationTokenHash String
+
   verificationExpiresAt DateTime
-  createdAt             DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
 
   @@map("pending_users")
+}
+
+enum AuthProvider {
+  CREDENTIALS
+  GOOGLE
+  GITHUB
+}
+
+model Account {
+  id String @id @default(cuid())
+
+  userId String
+
+  provider AuthProvider
+
+  providerAccountId String
+
+  passwordHash String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+
+  @@map("accounts")
+}
+
+model Session {
+  id String @id @default(cuid())
+
+  sessionToken String @unique
+
+  userId String
+
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+
+  token String @unique
+
+  expiresAt DateTime
+
+  @@unique([identifier, token])
+
+  @@map("verification_tokens")
 }
