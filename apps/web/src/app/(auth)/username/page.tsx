@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { OnboardingGuard } from "@/components/auth/OnboardingGuard";
 
 export default function UsernamePage() {
   const router = useRouter();
@@ -51,6 +52,9 @@ export default function UsernamePage() {
   }
 
   return (
+
+    <OnboardingGuard>
+
     <main className="min-h-screen flex items-center justify-center bg-gray-100">
       <form
         onSubmit={handleSubmit}
@@ -86,5 +90,7 @@ export default function UsernamePage() {
         </button>
       </form>
     </main>
+
+    </OnboardingGuard>
   );
 }

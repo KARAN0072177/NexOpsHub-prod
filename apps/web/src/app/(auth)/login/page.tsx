@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { GuestGuard } from "@/components/auth/GuestGuard";
+
 export default function LoginPage() {
   const router = useRouter();
 
@@ -53,6 +55,9 @@ export default function LoginPage() {
   }
 
   return (
+    
+    <GuestGuard>
+
     <main className="min-h-screen flex items-center justify-center bg-gray-100">
       <form
         onSubmit={handleSubmit}
@@ -96,5 +101,7 @@ export default function LoginPage() {
         </button>
       </form>
     </main>
+
+    </GuestGuard>
   );
 }

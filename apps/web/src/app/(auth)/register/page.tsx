@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { GuestGuard } from "@/components/auth/GuestGuard";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -77,6 +78,8 @@ export default function RegisterPage() {
   }
 
   return (
+
+    <GuestGuard>
     <main className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-md">
 
@@ -194,5 +197,7 @@ export default function RegisterPage() {
 
       </div>
     </main>
+
+    </GuestGuard>
   );
 }
