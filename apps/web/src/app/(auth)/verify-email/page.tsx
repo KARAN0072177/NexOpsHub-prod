@@ -53,7 +53,7 @@ export default function VerifyEmailPage() {
         );
 
         setTimeout(() => {
-          router.replace("/username");
+          router.replace("/login");
         }, 2000);
       } catch (error) {
         setStatus("error");
