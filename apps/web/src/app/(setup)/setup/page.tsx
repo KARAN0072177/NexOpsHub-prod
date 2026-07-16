@@ -1,9 +1,9 @@
-import { ProtectedGuard } from "@/components/auth/ProtectedGuard";
+import { SetupGuard } from "@/components/auth/SetupGuard";
 import { CreateProjectForm } from "@/components/project/CreateProjectForm";
 
 export default function SetupPage() {
   return (
-    <ProtectedGuard>
+    <SetupGuard>
       <main className="min-h-screen bg-gray-50">
         <div className="mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 py-16">
           <div className="mb-12">
@@ -69,6 +69,6 @@ export default function SetupPage() {
           </div>
         </div>
       </main>
-    </ProtectedGuard>
+    </SetupGuard>
   );
 }

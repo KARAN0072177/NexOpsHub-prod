@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 type Status = "loading" | "success" | "error";
 
-export default function VerifyEmailPage() {
+function VerifyEmailInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -70,58 +70,67 @@ export default function VerifyEmailPage() {
   }, [router, searchParams]);
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-md">
+    <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-md">
+      <h1 className="mb-6 text-center text-2xl font-bold">
+        Email Verification
+      </h1>
 
-        <h1 className="mb-6 text-center text-2xl font-bold">
-          Email Verification
-        </h1>
+      {status === "loading" && (
+        <div className="space-y-4 text-center">
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
+          <p className="text-gray-600">
+            {message}
+          </p>
+        </div>
+      )}
 
-        {status === "loading" && (
-          <div className="space-y-4 text-center">
-            <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
-
-            <p className="text-gray-600">
-              {message}
-            </p>
+      {status === "success" && (
+        <div className="space-y-4 text-center">
+          <div className="text-5xl">
+            ✅
           </div>
-        )}
+          <p className="font-medium text-green-600">
+            {message}
+          </p>
+        </div>
+      )}
 
-        {status === "success" && (
-          <div className="space-y-4 text-center">
-
-            <div className="text-5xl">
-              ✅
-            </div>
-
-            <p className="font-medium text-green-600">
-              {message}
-            </p>
+      {status === "error" && (
+        <div className="space-y-6 text-center">
+          <div className="text-5xl">
+            ❌
           </div>
-        )}
+          <p className="text-red-600">
+            {message}
+          </p>
+          <button
+            onClick={() => router.push("/login")}
+            className="w-full rounded-lg bg-black px-4 py-2 font-medium text-white transition hover:bg-gray-800"
+          >
+            Go to Login
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
-        {status === "error" && (
-          <div className="space-y-6 text-center">
-
-            <div className="text-5xl">
-              ❌
-            </div>
-
-            <p className="text-red-600">
-              {message}
-            </p>
-
-            <button
-              onClick={() => router.push("/login")}
-              className="w-full rounded-lg bg-black px-4 py-2 font-medium text-white transition hover:bg-gray-800"
-            >
-              Go to Login
-            </button>
-
-          </div>
-        )}
-
-      </div>
-    </main>
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={
+      <main className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
+        <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-md space-y-4 text-center">
+          <h1 className="mb-6 text-center text-2xl font-bold">
+            Email Verification
+          </h1>
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
+          <p className="text-gray-600">Loading page...</p>
+        </div>
+      </main>
+    }>
+      <main className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
+        <VerifyEmailInner />
+      </main>
+    </Suspense>
   );
 }
