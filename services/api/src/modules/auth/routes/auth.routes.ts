@@ -1,13 +1,16 @@
 import { Router } from "express";
 
-import { authController } from "../controllers/auth.controller.js";
+import registerRoutes from "./register.routes.js";
+import verifyEmailRoutes from "./verify-email.routes.js";
+import loginRoutes from "./login.routes.js";
+
+import usernameRoutes from "./username.routes.js";
 
 const router = Router();
 
-router.post("/register", authController.register.bind(authController));
-router.post(
-  "/verify-email",
-  authController.verifyEmail.bind(authController)
-);
+router.use(registerRoutes);
+router.use(verifyEmailRoutes);
+router.use(loginRoutes);
+router.use(usernameRoutes);
 
 export default router;

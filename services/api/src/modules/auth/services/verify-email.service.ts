@@ -4,6 +4,8 @@ import { hashVerificationToken } from "@/shared/utils/token.js";
 import { pendingUserRepository } from "../repositories/pending-user.repository.js";
 import { userRepository } from "../repositories/user.repository.js";
 
+import { accountRepository } from "../repositories/account.repository.js";
+
 export class VerifyEmailService {
     async execute(token: string) {
         const verificationTokenHash = hashVerificationToken(token);
@@ -24,7 +26,7 @@ export class VerifyEmailService {
         }
 
         await prisma.$transaction(async (tx) => {
-            await userRepository.create(
+            const user = await userRepository.create(
                 {
                     email: pendingUser.email,
                     emailVerifiedAt: new Date(),
@@ -34,6 +36,12 @@ export class VerifyEmailService {
             await pendingUserRepository.delete(
                 pendingUser.id
             );
+
+            await accountRepository.createCredentials({
+                userId: user.id,
+                passwordHash: pendingUser.passwordHash,
+            });
+
         });
 
         return {

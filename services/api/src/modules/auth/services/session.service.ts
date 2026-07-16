@@ -49,7 +49,7 @@ export class SessionService {
       return null;
     }
 
-    return session.user;
+    return session;
   }
 
   async destroy(sessionToken: string) {

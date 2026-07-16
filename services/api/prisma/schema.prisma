@@ -8,11 +8,13 @@ datasource db {
 }
 
 model Organization {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id String @id @default(uuid()) @db.Uuid
   name      String   @unique @db.VarChar(255)
   slug      String   @unique @db.VarChar(100)
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  memberships Membership[]
 
   @@map("organizations")
 }
@@ -30,6 +32,8 @@ model User {
 
   emailVerifiedAt DateTime?
 
+  onboardingCompleted Boolean @default(false)
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
@@ -37,6 +41,8 @@ model User {
   accounts Account[]
 
   sessions Session[]
+
+  memberships Membership[]
 
   @@map("users")
 }
@@ -114,3 +120,31 @@ model VerificationToken {
 
   @@map("verification_tokens")
 }
+
+enum OrganizationRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+model Membership {
+  id String @id @default(cuid())
+
+  userId String
+
+  organizationId String @db.Uuid
+
+  role OrganizationRole
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+
+  @@map("memberships")
+}
+
