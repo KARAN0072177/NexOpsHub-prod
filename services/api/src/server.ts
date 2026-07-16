@@ -8,6 +8,8 @@ import morgan from "morgan";
 
 import authRoutes from "./modules/auth/routes/auth.routes.js";
 
+import projectRoutes from "./modules/project/routes/project.routes.js";
+
 import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -40,6 +42,7 @@ app.get("/api/test", (_req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api", projectRoutes);
 
 const PORT = Number(process.env.PORT) || 4000;
 

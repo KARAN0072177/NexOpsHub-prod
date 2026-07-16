@@ -4,11 +4,11 @@ import { meService } from "../services/me.service.js";
 
 export class MeController {
   async me(req: Request, res: Response) {
-    const user = meService.execute(req.user);
+    const result = await meService.execute(req.user);
 
     return res.status(200).json({
       success: true,
-      user,
+      ...result,
     });
   }
 }

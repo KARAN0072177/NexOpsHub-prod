@@ -16,6 +16,8 @@ model Organization {
 
   memberships Membership[]
 
+  projects Project[]
+
   @@map("organizations")
 }
 
@@ -148,3 +150,24 @@ model Membership {
   @@map("memberships")
 }
 
+model Project {
+  id String @id @default(cuid())
+
+  organizationId String @db.Uuid
+
+name String @db.VarChar(100)
+
+slug String @db.VarChar(100)
+
+description String? @db.VarChar(500)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, slug])
+
+  @@map("projects")
+}

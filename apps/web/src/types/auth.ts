@@ -1,7 +1,14 @@
-export type AuthStatus =
-  | "loading"
-  | "authenticated"
-  | "unauthenticated";
+export interface OrganizationSummary {
+  id: string;
+  name: string;
+  slug: string;
+  hasProjects: boolean;
+}
+
+export interface OrganizationMembership
+  extends OrganizationSummary {
+  role: "OWNER" | "ADMIN" | "MEMBER" | "VIEWER";
+}
 
 export interface AuthUser {
   id: string;
@@ -14,10 +21,19 @@ export interface AuthUser {
   createdAt: string;
 }
 
+export type AuthStatus =
+  | "loading"
+  | "authenticated"
+  | "unauthenticated";
+
 export interface AuthContextValue {
   status: AuthStatus;
 
   user: AuthUser | null;
+
+  currentOrganization: OrganizationSummary | null;
+
+  organizations: OrganizationMembership[];
 
   refreshUser: () => Promise<void>;
 
