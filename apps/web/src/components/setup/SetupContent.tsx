@@ -4,6 +4,8 @@ import { CreateProjectForm } from "@/components/project/CreateProjectForm";
 
 import type { SetupStep } from "@/components/setup/types";
 
+import { CreateServiceForm } from "../service/CreateServiceForm";
+
 interface SetupContentProps {
   currentStep: SetupStep;
 }
@@ -26,8 +28,8 @@ export function SetupContent({
         Your Development environment is ready.
       </p>
 
-      <div className="mt-8 rounded-lg bg-blue-50 p-4 text-blue-800">
-        CreateServiceForm will be implemented next.
+      <div className="mt-8">
+        <CreateServiceForm />
       </div>
     </div>
   );

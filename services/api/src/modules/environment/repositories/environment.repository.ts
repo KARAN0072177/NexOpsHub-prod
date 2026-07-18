@@ -41,6 +41,23 @@ export class EnvironmentRepository {
     });
   }
 
+  async findDevelopmentByOrganizationId(
+    db: DbClient,
+    organizationId: string
+  ) {
+    return db.environment.findFirst({
+      where: {
+        type: EnvironmentType.DEVELOPMENT,
+        project: {
+          organizationId,
+        },
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+  }
+
 }
 
 export const environmentRepository =

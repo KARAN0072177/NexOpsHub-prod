@@ -22,10 +22,30 @@ export interface CreateProjectRequest {
   description?: string;
 }
 
+export interface Environment {
+  id: string;
+
+  projectId: string;
+
+  name: string;
+
+  slug: string;
+
+  type: string;
+
+  createdAt: string;
+
+  updatedAt: string;
+}
+
 export interface CreateProjectResponse {
   success: boolean;
 
   message: string;
 
-  project: Project;
+  project: {
+    project: Project;
+
+    environment: Environment;
+  };
 }

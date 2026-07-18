@@ -14,6 +14,8 @@ import cookieParser from "cookie-parser";
 
 import { serviceRoutes } from "./modules/service/index.js";
 
+import { setupRoutes } from "./modules/setup/index.js";
+
 dotenv.config();
 
 const app = express();
@@ -46,6 +48,7 @@ app.get("/api/test", (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api", projectRoutes);
 app.use("/api" , serviceRoutes);
+app.use("/api", setupRoutes);
 
 const PORT = Number(process.env.PORT) || 4000;
 

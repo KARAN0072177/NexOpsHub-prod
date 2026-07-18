@@ -64,14 +64,18 @@ export class ProjectService {
           description: data.description?.trim(),
         });
 
-      await environmentRepository.create(tx, {
-        projectId: project.id,
-        name: ENVIRONMENT.DEFAULT.NAME,
-        slug: ENVIRONMENT.DEFAULT.SLUG,
-        type: EnvironmentType.DEVELOPMENT,
-      });
+      const environment =
+        await environmentRepository.create(tx, {
+          projectId: project.id,
+          name: ENVIRONMENT.DEFAULT.NAME,
+          slug: ENVIRONMENT.DEFAULT.SLUG,
+          type: EnvironmentType.DEVELOPMENT,
+        });
 
-      return project;
+      return {
+        project,
+        environment,
+      };
     });
   }
 }
