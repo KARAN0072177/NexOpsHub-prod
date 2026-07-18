@@ -5,13 +5,13 @@ import { userRepository } from "../repositories/user.repository.js";
 
 import { sessionService } from "./session.service.js";
 
-const DUMMY_PASSWORD_HASH = process.env.DUMMY_PASSWORD_HASH!;
-
 export class LoginService {
   async execute(data: {
     email: string;
     password: string;
   }) {
+    const dummyPasswordHash = process.env.DUMMY_PASSWORD_HASH || "";
+
     const invalidCredentialsError = new Error(
       "Invalid email or password."
     );
@@ -26,7 +26,7 @@ export class LoginService {
      */
     if (!user) {
       await argon2
-        .verify(DUMMY_PASSWORD_HASH, data.password)
+        .verify(dummyPasswordHash, data.password)
         .catch(() => {});
 
       throw invalidCredentialsError;
@@ -42,7 +42,7 @@ export class LoginService {
 
     if (!account || !account.passwordHash) {
       await argon2
-        .verify(DUMMY_PASSWORD_HASH, data.password)
+        .verify(dummyPasswordHash, data.password)
         .catch(() => {});
 
       throw invalidCredentialsError;

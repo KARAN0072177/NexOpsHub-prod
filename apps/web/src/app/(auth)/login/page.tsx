@@ -4,9 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { GuestGuard } from "@/components/auth/GuestGuard";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { refreshUser } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,7 +48,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/username");
+      await refreshUser();
     } catch {
       setMessage("Something went wrong.");
     } finally {

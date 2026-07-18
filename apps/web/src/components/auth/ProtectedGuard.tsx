@@ -4,6 +4,7 @@ import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/hooks/useAuth";
+import { resolveLandingPage } from "@/lib/auth/resolveLandingPage";
 
 interface Props {
   children: ReactNode;
@@ -12,13 +13,26 @@ interface Props {
 export function ProtectedGuard({ children }: Props) {
   const router = useRouter();
 
-  const { status } = useAuth();
+  const { status, user, currentOrganization } = useAuth();
 
   useEffect(() => {
     if (status === "unauthenticated") {
       router.replace("/login");
+      return;
     }
-  }, [status, router]);
+
+    if (status === "authenticated") {
+      const destination = resolveLandingPage({
+        status,
+        user,
+        currentOrganization,
+      });
+
+      if (destination === "/username" || destination === "/setup") {
+        router.replace(destination);
+      }
+    }
+  }, [status, user, currentOrganization, router]);
 
   if (status === "loading") {
     return (

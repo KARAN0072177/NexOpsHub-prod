@@ -1,5 +1,10 @@
+import { EnvironmentType } from "@prisma/client";
+
+import { prisma } from "@/shared/database/prisma.js";
 import { generateSlug } from "@/shared/utils/slug.js";
 
+import { ENVIRONMENT } from "@/modules/environment/constants/environment.js";
+import { environmentRepository } from "@/modules/environment/repositories/environment.repository.js";
 import { membershipRepository } from "@/modules/organization/repositories/membership.repository.js";
 
 import { projectRepository } from "../repositories/project.repository.js";
@@ -32,10 +37,11 @@ export class ProjectService {
     const slug = generateSlug(data.name);
 
     /**
-     * Slug already exists?
+     * Project already exists?
      */
     const existingProject =
       await projectRepository.findBySlug(
+        prisma,
         data.organizationId,
         slug
       );
@@ -47,17 +53,28 @@ export class ProjectService {
     }
 
     /**
-     * Create project
+     * Atomic project creation
      */
-    const project = await projectRepository.create({
-      organizationId: data.organizationId,
-      name: data.name.trim(),
-      slug,
-      description: data.description?.trim(),
-    });
+    return prisma.$transaction(async (tx) => {
+      const project =
+        await projectRepository.create(tx, {
+          organizationId: data.organizationId,
+          name: data.name.trim(),
+          slug,
+          description: data.description?.trim(),
+        });
 
-    return project;
+      await environmentRepository.create(tx, {
+        projectId: project.id,
+        name: ENVIRONMENT.DEFAULT.NAME,
+        slug: ENVIRONMENT.DEFAULT.SLUG,
+        type: EnvironmentType.DEVELOPMENT,
+      });
+
+      return project;
+    });
   }
 }
 
-export const projectService = new ProjectService();
+export const projectService =
+  new ProjectService();

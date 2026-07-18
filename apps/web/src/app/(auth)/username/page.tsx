@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingGuard } from "@/components/auth/OnboardingGuard";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function UsernamePage() {
   const router = useRouter();
+  const { refreshUser } = useAuth();
 
   const [username, setUsername] = useState("");
 
@@ -43,7 +45,7 @@ export default function UsernamePage() {
         return;
       }
 
-      router.push("/dashboard");
+      await refreshUser();
     } catch {
       setMessage("Something went wrong.");
     } finally {

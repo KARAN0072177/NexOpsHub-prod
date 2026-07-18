@@ -130,6 +130,14 @@ enum OrganizationRole {
   VIEWER
 }
 
+enum EnvironmentType {
+  DEVELOPMENT
+  STAGING
+  PRODUCTION
+  TESTING
+  PREVIEW
+}
+
 model Membership {
   id String @id @default(cuid())
 
@@ -169,5 +177,31 @@ description String? @db.VarChar(500)
 
   @@unique([organizationId, slug])
 
+  environments Environment[]
+
   @@map("projects")
+}
+
+model Environment {
+  id String @id @default(cuid())
+
+  projectId String
+
+  name String @db.VarChar(50)
+
+  slug String @db.VarChar(50)
+
+  type EnvironmentType
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, slug])
+
+  @@unique([projectId, type])
+
+  @@map("environments")
 }

@@ -2,6 +2,8 @@ import { membershipRepository } from "@/modules/organization/repositories/member
 
 import { projectRepository } from "@/modules/project/repositories/project.repository.js";
 
+import { prisma } from "@/shared/database/prisma.js";
+
 export class MeService {
     async execute(user: Express.User) {
         const memberships =
@@ -23,6 +25,7 @@ export class MeService {
 
         const hasProjects = currentOrganization
             ? await projectRepository.existsByOrganizationId(
+                prisma,
                 currentOrganization.id
             )
             : false;

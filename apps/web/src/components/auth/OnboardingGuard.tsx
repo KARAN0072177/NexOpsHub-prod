@@ -4,6 +4,7 @@ import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/hooks/useAuth";
+import { resolveLandingPage } from "@/lib/auth/resolveLandingPage";
 
 interface Props {
   children: ReactNode;
@@ -12,7 +13,7 @@ interface Props {
 export function OnboardingGuard({ children }: Props) {
   const router = useRouter();
 
-  const { status, user } = useAuth();
+  const { status, user, currentOrganization } = useAuth();
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -24,9 +25,14 @@ export function OnboardingGuard({ children }: Props) {
       status === "authenticated" &&
       user?.onboardingCompleted
     ) {
-      router.replace("/dashboard");
+      const destination = resolveLandingPage({
+        status,
+        user,
+        currentOrganization,
+      });
+      router.replace(destination);
     }
-  }, [status, user, router]);
+  }, [status, user, currentOrganization, router]);
 
   if (status === "loading") {
     return (
