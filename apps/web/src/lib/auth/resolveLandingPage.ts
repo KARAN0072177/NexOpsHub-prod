@@ -18,5 +18,9 @@ export function resolveLandingPage(
     return "/setup";
   }
 
+  if (!auth.currentOrganization?.hasServices) {
+    return "/setup";
+  }
+
   return "/dashboard";
 }

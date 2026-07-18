@@ -22,6 +22,25 @@ export class EnvironmentRepository {
       data,
     });
   }
+
+  async findByIdWithProject(
+    db: DbClient,
+    id: string
+  ) {
+    return db.environment.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        project: {
+          select: {
+            organizationId: true,
+          },
+        },
+      },
+    });
+  }
+
 }
 
 export const environmentRepository =

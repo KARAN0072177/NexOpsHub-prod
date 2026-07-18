@@ -23,11 +23,26 @@ export class MeService {
                 (membership) => membership.role === "OWNER"
             )?.organization ?? null;
 
-        const hasProjects = currentOrganization
+                const hasProjects = currentOrganization
             ? await projectRepository.existsByOrganizationId(
                 prisma,
                 currentOrganization.id
             )
+            : false;
+
+        const hasServices = currentOrganization
+            ? (await prisma.service.findFirst({
+                where: {
+                    environment: {
+                        project: {
+                            organizationId: currentOrganization.id,
+                        },
+                    },
+                },
+                select: {
+                    id: true,
+                },
+            })) !== null
             : false;
 
         return {
@@ -48,6 +63,7 @@ export class MeService {
                     name: currentOrganization.name,
                     slug: currentOrganization.slug,
                     hasProjects,
+                    hasServices,
                 }
                 : null,
 

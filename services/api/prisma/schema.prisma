@@ -159,7 +159,7 @@ model Membership {
 }
 
 model Project {
-  id String @id @default(cuid())
+  id String @id @default(uuid()) @db.Uuid
 
   organizationId String @db.Uuid
 
@@ -183,9 +183,10 @@ description String? @db.VarChar(500)
 }
 
 model Environment {
-  id String @id @default(cuid())
 
-  projectId String
+id String @id @default(uuid()) @db.Uuid
+
+projectId String @db.Uuid
 
   name String @db.VarChar(50)
 
@@ -203,5 +204,25 @@ model Environment {
 
   @@unique([projectId, type])
 
+  services Service[]
+
   @@map("environments")
+}
+
+model Service {
+  id            String   @id @default(uuid()) @db.Uuid
+
+  environmentId String   @db.Uuid
+  environment   Environment @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+
+  name          String
+  slug          String
+  description   String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([environmentId, slug])
+
+  @@map("services")
 }

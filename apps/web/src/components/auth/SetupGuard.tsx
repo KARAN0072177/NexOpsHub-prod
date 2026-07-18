@@ -4,6 +4,7 @@ import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/hooks/useAuth";
+import { resolveLandingPage } from "@/lib/auth/resolveLandingPage";
 
 interface Props {
   children: ReactNode;
@@ -12,7 +13,7 @@ interface Props {
 export function SetupGuard({ children }: Props) {
   const router = useRouter();
 
-  const { status, currentOrganization } = useAuth();
+  const { status, user, currentOrganization } = useAuth();
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -20,10 +21,18 @@ export function SetupGuard({ children }: Props) {
       return;
     }
 
-    if (status === "authenticated" && currentOrganization?.hasProjects) {
-      router.replace("/dashboard");
+    if (status === "authenticated") {
+      const destination = resolveLandingPage({
+        status,
+        user,
+        currentOrganization,
+      });
+
+      if (destination !== "/setup") {
+        router.replace(destination);
+      }
     }
-  }, [status, currentOrganization, router]);
+  }, [status, user, currentOrganization, router]);
 
   if (status === "loading") {
     return (
@@ -37,7 +46,11 @@ export function SetupGuard({ children }: Props) {
     return null;
   }
 
-  if (currentOrganization?.hasProjects) {
+  const isSetupActive =
+    status === "authenticated" &&
+    resolveLandingPage({ status, user, currentOrganization }) === "/setup";
+
+  if (!isSetupActive) {
     return null;
   }
 

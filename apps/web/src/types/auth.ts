@@ -3,6 +3,7 @@ export interface OrganizationSummary {
   name: string;
   slug: string;
   hasProjects: boolean;
+  hasServices: boolean;
 }
 
 export interface OrganizationMembership

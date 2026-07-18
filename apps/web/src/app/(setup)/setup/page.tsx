@@ -1,5 +1,6 @@
 import { SetupGuard } from "@/components/auth/SetupGuard";
-import { CreateProjectForm } from "@/components/project/CreateProjectForm";
+
+import { SetupFlow } from "@/components/setup/SetupFlow";
 
 export default function SetupPage() {
   return (
@@ -22,51 +23,7 @@ export default function SetupPage() {
             </p>
           </div>
 
-          <div className="grid gap-10 lg:grid-cols-[350px_1fr]">
-            {/* Progress */}
-            <div className="rounded-xl border bg-white p-6 shadow-sm">
-              <h2 className="mb-6 text-xl font-semibold">
-                Setup Progress
-              </h2>
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span>✅ Account Created</span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span>✅ Username Configured</span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span>✅ Organization Created</span>
-                </div>
-
-                <div className="flex items-center justify-between font-medium">
-                  <span>🟦 Create First Project</span>
-                </div>
-
-                <div className="flex items-center justify-between text-gray-400">
-                  <span>⬜ Connect First Resource</span>
-                </div>
-
-                <div className="flex items-center justify-between text-gray-400">
-                  <span>⬜ Enable Monitoring</span>
-                </div>
-              </div>
-
-              <div className="mt-8 rounded-lg bg-blue-50 p-4">
-                <p className="text-sm text-blue-800">
-                  <strong>Current Step:</strong> Create your first
-                  project. Projects organize your applications,
-                  environments and infrastructure.
-                </p>
-              </div>
-            </div>
-
-            {/* Form */}
-            <CreateProjectForm />
-          </div>
+          <SetupFlow />
         </div>
       </main>
     </SetupGuard>
